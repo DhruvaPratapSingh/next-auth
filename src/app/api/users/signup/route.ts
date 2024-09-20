@@ -1,4 +1,3 @@
-
 import {connect} from "@/dbconfig/dbconfig"
 import bcryptjs from "bcrypt"
 import User from '@/models/usermodel'
