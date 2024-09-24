@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
-
-
-
 export const getDataFromtoken=(request:NextRequest)=>{
     try {
         const token=request.cookies.get("token")?.value || "";
@@ -10,6 +7,6 @@ export const getDataFromtoken=(request:NextRequest)=>{
        return decodedToken.id;
     } catch (error:any) {
         // return NextResponse.json({error:error.message},{status:500})
-        throw new error(error.message)
+        throw new Error(error.message)
     }
 }
