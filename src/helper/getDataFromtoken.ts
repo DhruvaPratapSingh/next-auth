@@ -1,12 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import jwt from 'jsonwebtoken'
-export const getDataFromtoken=(request:NextRequest)=>{
+import { NextRequest } from "next/server";
+import jwt, { JwtPayload } from 'jsonwebtoken';
+
+export const getDataFromToken = (request: NextRequest): string | null => {
     try {
-        const token=request.cookies.get("token")?.value || "";
-       const decodedToken:any = jwt.verify(token,process.env.TOKEN_SECRET!);
-       return decodedToken.id;
-    } catch (error:any) {
-        // return NextResponse.json({error:error.message},{status:500})
-        throw new Error(error.message)
+        const token = request.cookies.get("token")?.value || "";
+        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET!) as JwtPayload;
+        return decodedToken.id || null;
+    } catch (error) {
+        if (error instanceof jwt.JsonWebTokenError) {
+            console.error("JWT error:", error.message);
+            return null; 
+        } else {
+            console.error("Error verifying token:", error);
+            return null; 
+        }
     }
-}
+};

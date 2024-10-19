@@ -2,9 +2,10 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Circles } from 'react-loader-spinner';
 import { toast } from "react-hot-toast";
+
 export default function LoginPage() {
     const router = useRouter();
     const [user, setUser] = React.useState({
@@ -21,10 +22,11 @@ export default function LoginPage() {
             console.log("Login success", response.data);
             toast.success("Login successful!");
             router.push("/profile");
-        } catch (error: any) {
+        } catch (error) {
+            const axiosError = error as AxiosError; 
             alert("Wrong credentials");
-            console.log("Login failed", error.message);
-            toast.error(error.response?.data?.message || "Login failed. Please try again.");
+            console.log("Login failed", axiosError.message);
+            toast.error("Login failed. Please try again.");
         } finally {
             setLoading(false);
         }

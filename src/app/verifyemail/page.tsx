@@ -1,26 +1,27 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
 export default function VerifyEmailPage() {
-    const [token, setToken] = useState("");
-    const [verified, setVerified] = useState(false);
-    const [error, setError] = useState(false);
+    const [token, setToken] = useState<string>("");
+    const [verified, setVerified] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
 
-    const verifyUserEmail = async () => {
+    const verifyUserEmail = useCallback(async () => {
         try {
             await axios.post('/api/users/verifyemail', { token });
             setVerified(true);
         } catch (error: unknown) {
             setError(true);
-         if (error instanceof Error) {
+            if (error instanceof Error) {
                 console.log(error.message);
             } else {
                 console.log('An unknown error occurred');
             }
         }   
-    }
+    }, [token]);
+
     useEffect(() => {
         const urlToken = window.location.search.split("=")[1];
         setToken(urlToken || "");
@@ -30,8 +31,7 @@ export default function VerifyEmailPage() {
         if (token.length > 0) {
             verifyUserEmail();
         }
-    }, [token]);
-
+    }, [token, verifyUserEmail]);
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
             <div className="bg-white bg-opacity-30 backdrop-blur-md shadow-lg rounded-lg p-8 m-4 max-w-md w-full text-center">
