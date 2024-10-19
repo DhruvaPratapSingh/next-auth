@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
-import { Circles } from 'react-loader-spinner'; // Importing a loading spinner
+import { Circles } from 'react-loader-spinner';
 
 const Page = () => {
     const router = useRouter();
@@ -30,14 +30,24 @@ const Page = () => {
                 </div>
             );
             router.push("/login");
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log("Signup failed");
-            toast.error(
-                <div className="flex items-center">
-                    <FaExclamationCircle className="mr-2 text-red-500" />
-                    Signup failed. Please check your credentials ❌
-                </div>
-            );
+        
+            if (error instanceof Error) {
+                toast.error(
+                    <div className="flex items-center">
+                        <FaExclamationCircle className="mr-2 text-red-500" />
+                        {error.message} ❌
+                    </div>
+                );
+            } else {
+                toast.error(
+                    <div className="flex items-center">
+                        <FaExclamationCircle className="mr-2 text-red-500" />
+                        Signup failed. Please try again later. ❌
+                    </div>
+                );
+            }
         } finally {
             setLoading(false);
         }

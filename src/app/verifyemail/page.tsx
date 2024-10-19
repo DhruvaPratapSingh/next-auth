@@ -12,12 +12,15 @@ export default function VerifyEmailPage() {
         try {
             await axios.post('/api/users/verifyemail', { token });
             setVerified(true);
-        } catch (error: any) {
+        } catch (error: unknown) {
             setError(true);
-            console.log(error.response.data);
-        }
+         if (error instanceof Error) {
+                console.log(error.message);
+            } else {
+                console.log('An unknown error occurred');
+            }
+        }   
     }
-
     useEffect(() => {
         const urlToken = window.location.search.split("=")[1];
         setToken(urlToken || "");

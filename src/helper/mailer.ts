@@ -2,7 +2,13 @@ import  bcryptjs  from 'bcrypt';
 import User from "@/models/usermodel";
 import nodemailer from "nodemailer"
 
-export const sendEmail=async({email,emailtype,userId}:any)=>{
+interface EmailParams {
+  email: string;
+  emailtype: string;
+  userId: string;
+}
+
+export const sendEmail = async ({ email, emailtype, userId }: EmailParams) => {
     try {
 
       // configure mail 
@@ -47,7 +53,11 @@ export const sendEmail=async({email,emailtype,userId}:any)=>{
           }
          const mailresponce=await transporter.sendMail(mailOption);
          return mailresponce;
-    } catch (error:any){
+    }catch (error: unknown) {
+      if (error instanceof Error) {
         throw new Error(error.message);
+      } else {
+        throw new Error('An unknown error occurred');
+      }
     }
 }
